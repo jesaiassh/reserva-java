@@ -10,6 +10,7 @@ public class Reserva {
 	private Date saida;
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	
 	public Reserva(Integer numeroQuarto, Date entrada, Date saida) {
 		this.numeroQuarto = numeroQuarto;
 		this.entrada = entrada;
@@ -29,13 +30,22 @@ public class Reserva {
 	}
 	//método que retorna dia hora e minutos de entrada e saida
 	public long duracao() {
-		long diff=entrada.getTime()-saida.getTime();
+		long diff=entrada.getTime() - saida.getTime();
 		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 	//metodo que atualiza
-	public void dataDeAtualizacao(Date entrada,Date saida) {
+	public String dataDeAtualizacao(Date entrada,Date saida) {
+		//data de agora
+		Date now = new Date();
+		if(entrada.before(now) ||saida.before(now)) {
+			return "Erro na reserva ,a data de reserva tem que ser futura";	
+		}
+		 if (!saida.after(entrada)) {
+			return "Erro na reserva ,a data de saida nao pode ser antes da data de entrada";
+		}
 		this.entrada=entrada;
 		this.saida=saida;
+		return null;
 	}
 	
 @Override
@@ -44,7 +54,7 @@ public String toString() {
 			+numeroQuarto
 			+",entrada: "
 			+sdf.format(entrada)
-			+",saida: "
+			+"saida: "
 			+sdf.format(saida)
 			+" ,"
 			+duracao()
