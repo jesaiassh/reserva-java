@@ -6,23 +6,23 @@ import java.util.Date;
 import java.util.Scanner;
 
 import model.entities.Reserva;
+import model.exceptions.DominioException;
 
 public class Program {
 
-	public static void main(String[]args) throws ParseException {
+	public static void main(String[]args)  {
 		Scanner sc = new Scanner(System.in);
 		SimpleDateFormat sdf = new   SimpleDateFormat("dd/MM/yyyy");
-		System.out.println("Numero do quarto");
-		int numero = sc.nextInt();
-		System.out.println("data de entrada(dd/MM/yyyy):");
-		Date entrada = sdf.parse(sc.next());
-		System.out.println("data de saida(dd/MM/yyyy):");
-		Date saida = sdf.parse(sc.next());
 		
-		//palavra after testa se a data de saidda nao é antes da de entrada
-		if (!saida.after(entrada)) {
-			System.out.println("Erro na reserva ,a data de saida nao pode ser antes da data de entrada");
-		}else {
+		try {
+			System.out.println("Numero do quarto");
+			int numero = sc.nextInt();
+			System.out.println("data de entrada(dd/MM/yyyy):");
+			Date entrada = sdf.parse(sc.next());
+			System.out.println("data de saida(dd/MM/yyyy):");
+			Date saida = sdf.parse(sc.next());
+			
+		
 			Reserva reserva = new Reserva(numero, entrada, saida);
 			System.out.println("Reserva"+reserva);
 			//fzendo a atualizacao das datas
@@ -33,16 +33,20 @@ public class Program {
 			entrada = sdf.parse(sc.next());
 			System.out.println("data de saida(dd/MM/yyyy):");
 			saida = sdf.parse(sc.next());
-			
-				String error = reserva.dataDeAtualizacao(entrada, saida);
-				if (error != null) {
-				System.out.println("erro na Reserva:" + error);
-				}
-				else {
-					System.out.println(" Reserva:" + reserva);
-			}	
+		
+		    reserva.dataDeAtualizacao(entrada, saida);
+			 System.out.println("erro na Reserva:" +reserva);
+				
 			}
-			
+		catch(ParseException e) {
+			System.out.println("Por favor digite uma data valida");
+		}
+		catch(DominioException e) {
+			System.out.println("Erro na reserva:" + e.getMessage());
+		}
+	   catch(RuntimeException e) {
+		   System.out.println("erro inesperado");
+	   }
 		sc.close();
 	}
 }
